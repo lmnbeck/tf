@@ -13,7 +13,7 @@ Y_ = [[x1+x2+(rdm.rand()/10-0.05)] for (x1,x2) in X]
 #1
 x = tf.placeholder(tf.float32, shape=(None,2))
 y_ = tf.placeholder(tf.float32, shape=(None,1))
-w1 = tf.Variable(tf.random_normal(2,1), stddev=1, seed=1)
+w1 = tf.Variable(tf.random_normal([2,1], stddev=1, seed=1))
 y = tf.matmul(x,w1)
 
 #2
@@ -22,7 +22,7 @@ train_step = tf.train.GradientDescentOptimizer(0.001).minimize(loss_mes)
 
 #3
 with tf.Session() as sess:
-	init_op = tf.global_variables.initializer()
+	init_op = tf.global_variables_initializer()
 	sess.run(init_op)
 
 	STEPS = 20000
