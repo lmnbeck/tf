@@ -3,21 +3,21 @@
 #0 import modules and generate data sets
 import tensorflow as tf
 import numpy as np
-import matplotlib.pylot as plt
+import matplotlib.pyplot as plt
 BATCH_SIZE = 30
-SEED = 2
+seed = 2
 
 # Generate random number based on seed
 rdm = np.random.RandomState(seed)
 # Return 300 line 2 column matrix, represents 300 groups of coordinate (x0,x1) as input data sets
-X = rdm.rand(300, 2)
+X = rdm.randn(300, 2)
 # pick one line from matrix, if the sum of the squares of two coordinates is less than 2, set Y_ to 1,else set Y_ to 0
 # As lable of input data sets (right answer)
-Y_ = [[int(x0*x0 + x1*x1 < 2) for (x0,x1) in X]]
+Y_ = [int(x0*x0 + x1*x1 < 2) for (x0,x1) in X]
 # Traverse all the points in Y_, if 1 set 'red' and others set to 'blue'.
 Y_c = [['red' if y else 'blue'] for y in Y_]
 # shape X and Y_, first param -1 means n, second param means column
-X = np.vstack(X),reshape(-1, 2)
+X = np.vstack(X).reshape(-1, 2)
 Y_ = np.vstack(Y_).reshape(-1, 1)
 print X
 print Y_
@@ -38,7 +38,7 @@ def get_bias(shape):
 	return b
 
 x = tf.placeholder(tf.float32, shape=(None,2))
-y = tf.placeholder(tf.float32, shape=(None,1))
+y_ = tf.placeholder(tf.float32, shape=(None,1))
 
 w1 = get_weight([2,11],0.01)
 b1 = get_bias([11])
