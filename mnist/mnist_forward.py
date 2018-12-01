@@ -23,5 +23,5 @@ def forward(x, regularizer):
 
     w2 = get_weight([LAYER1_NODE, OUTPUT_NODE], regularizer)
     b2 = get_bias([OUTPUT_NODE])
-    y2 = tf.matmul(y1, w2) + b2
-
+    y = tf.matmul(y1, w2) + b2
+    return y

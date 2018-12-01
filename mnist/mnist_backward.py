@@ -26,7 +26,7 @@ def backward(mnist):
     global_step = tf.Variable(0, trainable=False)
 
     # 调用包含正则化的损失函数loss
-    ce = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=tf.argmax(y_,1))
+    ce = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=(tf.argmax(y_,1)))
     cem = tf.reduce_mean(ce)
     loss = cem + tf.add_n(tf.get_collection('losses'))
 
@@ -39,7 +39,7 @@ def backward(mnist):
         staircase=True)
 
     # 定义学习过程
-    train_step = tf.train.GradientDescentOptimizer((learning_rate).minimize(loss, global_step=global_step))
+    train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
     # 定义滑动平均
     ema = tf.train.ExponentialMovingAverage(MOVING_AVERAGE_DECAY, global_step)
     ema_op = ema.apply(tf.trainable_variables())
@@ -48,7 +48,7 @@ def backward(mnist):
 
     saver = tf.train.Saver()
 
-    with tf.Session as sess:
+    with tf.Session() as sess:
         init_op = tf.global_variables_initializer()
         sess.run(init_op)
 
