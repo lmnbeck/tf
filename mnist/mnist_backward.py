@@ -19,7 +19,7 @@ MODEL_NAME = "mnist_model"
 def backward(mnist):
     # 用placeholder给x y_占位
     x = tf.placeholder(tf.float32, [None, mnist_forward.INPUT_NODE])
-    y_ = tf.placceholder(tf.float32, [None, mnist_forward.OUTPUT_NODE])
+    y_ = tf.placeholder(tf.float32, [None, mnist_forward.OUTPUT_NODE])
     # 调用前像传播的程序，计算输出y
     y = mnist_forward.forward(x, REGULARIZER)
     # 定义论述计数器
