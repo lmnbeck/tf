@@ -25,6 +25,7 @@ def backward(mnist):
     # 定义论述计数器
     global_step = tf.Variable(0, trainable=False)
 
+    print "global_step after define:\n", global_step
     # 调用包含正则化的损失函数loss
     ce = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=(tf.argmax(y_,1)))
     cem = tf.reduce_mean(ce)
@@ -51,6 +52,10 @@ def backward(mnist):
     with tf.Session() as sess:
         init_op = tf.global_variables_initializer()
         sess.run(init_op)
+
+        ckpt = tf.train.get_checkpoint_state(MODEL_SAVE_PATH)
+        if ckpt and ckpt.model_checkpoint_path:
+            saver.restore(sess, ckpt.model_checkpoint_path)
 
         for i in range(STEPS):
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
