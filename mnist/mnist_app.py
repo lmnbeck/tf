@@ -45,7 +45,7 @@ def pre_pic(picName):
 
     # 变成灰度图，转换成矩阵
     im_arr = np.array(reIm.convert('L'))
-    threshold = 50
+    threshold = 125
     # 反色,降低噪声
     for i in range(28):
        for j in range(28):
