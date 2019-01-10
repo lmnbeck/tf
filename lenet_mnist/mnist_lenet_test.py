@@ -4,15 +4,23 @@
 import time
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-import mnist_forward
-import mnist_backward
+import mnist_lenet_forward
+import mnist_lenet_backward
+import numpy as np
+
 TEST_INTERNAL_SECS = 5
 
 def test(mnist):
     with tf.Graph().as_default() as g:
-        x = tf.placeholder(tf.float32, [None, mnist_forward.INPUT_NODE])
+        x = tf.placeholder(tf.float32, [
+        mnist.test.num_examples,        # 每轮喂入多少张图片
+        mnist_lenet_forward.IMAGE_SIZE, # 行分辨率
+        mnist_lenet_forward.IMAGE_SIZE, # 列分辨率
+        mnist_lenet_forward.NUM_CHANNELS # 输入的通道数
+        ])
+
         y_ = tf.placeholder(tf.float32, [None, mnist_forward.OUTPUT_NODE])
-        y = mnist_forward.forward(x, None)
+        y = mnist_forward.forward(x, False, None)
 
         ema = tf.train.ExponentialMovingAverage(mnist_backward.MOVING_AVERAGE_DECAY)
         ema_restore = ema.variables_to_restore()
@@ -27,6 +35,12 @@ def test(mnist):
                 if ckpt and ckpt.model_checkpoint_path:
                     saver.restore(sess, ckpt.model_checkpoint_path)
                     global_step = ckpt.model_checkpoint_path.split('/')[-1].split('-')[-1]
+                    reshaped_x = np.reshape(mnist.test.image,(
+                        mnist.test.num_examples,        # 每轮喂入多少张图片
+                        mnist_lenet_forward.IMAGE_SIZE, # 行分辨率
+                        mnist_lenet_forward.IMAGE_SIZE, # 列分辨率
+                        mnist_lenet_forward.NUM_CHANNELS # 输入的通道数
+                        ))
                     accuracy_score = sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
                     print("After %s training steps, test accuracy = %g ") % (global_step, accuracy_score)
                 else:

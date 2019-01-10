@@ -3,11 +3,12 @@
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-import mnist_forward
+import mnist_lenet_forward
 import os
+import numpy as np
 
-BATCH_SIZE = 200
-LEARNING_RATE_BASE = 0.1
+BATCH_SIZE = 100
+LEARNING_RATE_BASE = 0.005
 LEARNING_RATE_DECAY = 0.99
 REGULARIZER = 0.0001
 STEPS = 500000
@@ -18,10 +19,15 @@ MODEL_NAME = "mnist_model"
 
 def backward(mnist):
     # 用placeholder给x y_占位
-    x = tf.placeholder(tf.float32, [None, mnist_forward.INPUT_NODE])
+    x = tf.placeholder(tf.float32, [
+        BATCH_SIZE,                     # 每轮喂入多少张图片
+        mnist_lenet_forward.IMAGE_SIZE, # 行分辨率
+        mnist_lenet_forward.IMAGE_SIZE, # 列分辨率
+        mnist_lenet_forward.NUM_CHANNELS # 输入的通道数
+        ])
     y_ = tf.placeholder(tf.float32, [None, mnist_forward.OUTPUT_NODE])
-    # 调用前像传播的程序，计算输出y
-    y = mnist_forward.forward(x, REGULARIZER)
+    # 调用前像传播的程序，计算输出y True表示训练师使用dropout
+    y = mnist_lenet_forward.forward(x, True, REGULARIZER)
     # 定义论述计数器
     global_step = tf.Variable(0, trainable=False)
 
@@ -59,6 +65,13 @@ def backward(mnist):
 
         for i in range(STEPS):
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
+            # 对数据集中取出的xs进行reshape操作
+            reshaped_xs = np.reshape(xs, (
+                BATCH_SIZE,
+                mnist_lenet_forward.IMAGE_SIZE,
+                mnist_lenet_forward.IMAGE_SIZE,
+                mnist_lenet_forward.NUM_CHANNELS
+            ))
             _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
             if i % 1000 == 0:
                 print("After %d training steps, loss on training batch is %g.") % (step, loss_value)
