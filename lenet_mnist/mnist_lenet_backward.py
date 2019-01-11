@@ -25,7 +25,7 @@ def backward(mnist):
         mnist_lenet_forward.IMAGE_SIZE, # 列分辨率
         mnist_lenet_forward.NUM_CHANNELS # 输入的通道数
         ])
-    y_ = tf.placeholder(tf.float32, [None, mnist_forward.OUTPUT_NODE])
+    y_ = tf.placeholder(tf.float32, [None, mnist_lenet_forward.OUTPUT_NODE])
     # 调用前像传播的程序，计算输出y True表示训练师使用dropout
     y = mnist_lenet_forward.forward(x, True, REGULARIZER)
     # 定义论述计数器

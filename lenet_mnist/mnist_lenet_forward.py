@@ -27,7 +27,7 @@ def conv2d(x, w):
 def max_pool_2x2(x):
     return tf.nn.max_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='SAME')
 
-def forward(x, regularizer):
+def forward(x, train, regularizer):
     # 初始化第一层卷积核
     conv1_w = get_weight([CONV1_SIZE, CONV1_SIZE, NUM_CHANNELS, CONV1_KERNEL_NUM], regularizer)
     # 初始化第一层偏置
@@ -37,7 +37,7 @@ def forward(x, regularizer):
     # 对卷积后的输出conv1添加偏置conv1_b, 通过relu激活函数
     relu1 = tf.nn.relu(tf.nn.bias_add(conv1, conv1_b))
     # 激活后的输出进行最大池化
-    pool1 = max_pool_2X2(relu1)
+    pool1 = max_pool_2x2(relu1)
 
     # 初始化第二层卷积核
     conv2_w = get_weight([CONV2_SIZE, CONV2_SIZE, CONV1_KERNEL_NUM, CONV2_KERNEL_NUM], regularizer)
@@ -48,7 +48,7 @@ def forward(x, regularizer):
     # 对卷积后的输出conv1添加偏置conv1_b, 通过relu激活函数
     relu2 = tf.nn.relu(tf.nn.bias_add(conv2, conv2_b))
     # 激活后的输出进行最大池化. pool2是第二层的输出，需要把它从三维张量变为二维张量
-    pool2 = max_pool_2X2(relu2)
+    pool2 = max_pool_2x2(relu2)
 
     # 得到pool2输出矩阵的维度，存入list中
     pool_shape = pool2.get_shape().as_list()
