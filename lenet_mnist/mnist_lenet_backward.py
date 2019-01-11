@@ -72,7 +72,7 @@ def backward(mnist):
                 mnist_lenet_forward.IMAGE_SIZE,
                 mnist_lenet_forward.NUM_CHANNELS
             ))
-            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
+            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: reshaped_xs, y_: ys})
             if i % 1000 == 0:
                 print("After %d training steps, loss on training batch is %g.") % (step, loss_value)
                 saver.save(sess, os.path.join(MODEL_SAVE_PATH), global_step=global_step)
